@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "include/SomeObj.h"
+#include "include/Command.h"
 #include "include/Repository.h"
 #include "include/Utils.h"
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     }
     
     checkNoArgs(args);
-    SomeObj bloop;
+    Command bloop;
     std::string firstArg = args[0];
     
     if (firstArg == "init") {
