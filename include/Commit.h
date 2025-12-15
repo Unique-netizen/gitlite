@@ -20,17 +20,20 @@ class Commit{
 
 public:
     Commit() : message{"initial commit"}, timestamp{0} {};
-    Commit(std::string str, std::string msg);//constructor from parent, current time and current message
-    Commit(std::string str);//constructor for getting the corrent commit
+    Commit(const std::string& str, std::string msg);//constructor from parent, current time and current message
+    Commit(const std::string& str);//constructor for getting the corrent commit
 
     //get
     std::string getHash();
+    std::string getMessage() const;
+    time_t getTimestamp() const;
+    std::string getFirstParent() const;
     std::string getBlob(const std::string& filename);
     //modify
     void addFiles(std::map<std::string, std::string>& addtion);
     void rmFiles(std::map<std::string, int>& removal);
     //find
-    bool in_commit(const std::string& filename);
+    bool in_commit(const std::string& filename) const;
 
     //write to file
     void writeCommitFile();

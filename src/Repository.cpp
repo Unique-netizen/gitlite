@@ -7,6 +7,9 @@
 
 #include <string>
 #include <map>
+#include <sstream>
+#include <iostream>
+#include <ctime>
 
 //get commit hash of current HEAD
 std::string Repository::getHEAD(){
@@ -97,7 +100,8 @@ void Repository::commit(const std::string& message){
     //get parent commit from HEAD
     std::string HEAD = getHEAD();
     //construct current from parent
-    Commit commit(Utils::readContentsAsString(".gitlite/commits/" + HEAD), message);
+    std::string parentStr = Utils::readContentsAsString(".gitlite/commits/" + HEAD);
+    Commit commit(parentStr, message);
     //stage
     Stage stage(Utils::readContentsAsString(".gitlite/stage"));
     std::map<std::string, std::string> addition = stage.getAdd();
@@ -118,5 +122,117 @@ void Repository::commit(const std::string& message){
         Utils::writeContents(".gitlite/branches/" + branch, commit.getHash());
     }else{
         Utils::writeContents(".gitlite/HEAD", commit.getHash());
+    }
+}
+
+//log
+//helper function to get format time
+std::string formatTime(time_t timestamp){
+    char buffer[40];
+    struct tm timeinfo;
+    localtime_r(&timestamp, &timeinfo);
+    std::strftime(buffer, sizeof(buffer), "%a %b %d %H:%M:%S %Y %z", &timeinfo);
+    return std::string(buffer);
+}
+//helper function for format output
+void formatOutput(const std::string& hash, const Commit& commit){
+    std::string message = commit.getMessage();
+    time_t timestamp = commit.getTimestamp();
+    std::string outputTime = formatTime(timestamp);
+
+    std::cout << "===\n";
+    std::cout << "commit " << hash << "\n";
+    std::cout << "Date: " << outputTime << "\n";
+    std::cout << message << "\n\n";
+}
+//helper function to output branch
+void outputBranch(const std::string hash){
+    std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
+    Commit commit(str);
+    formatOutput(hash, commit);
+    if(commit.getMessage() == "initial commit") return;
+    std::string nextHash = commit.getFirstParent();
+    outputBranch(nextHash);
+}
+void Repository::log(){
+    std::string hash = getHEAD();
+    outputBranch(hash);
+}
+void Repository::globalLog(){
+    std::vector<std::string> hashes = Utils::plainFilenamesIn(".gitlite/commits");
+    for(auto& hash : hashes){
+        std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
+        Commit commit(str);
+        formatOutput(hash, commit);
+    }
+}
+
+void Repository::find(const std::string& message){
+    std::vector<std::string> hashes = Utils::plainFilenamesIn(".gitlite/commits");
+    bool found = false;
+    for(auto& hash : hashes){
+        std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
+        Commit commit(str);
+        if(commit.getMessage() == message){
+            std::cout<<hash<<"\n";
+            if(!found) found = true;
+        }
+    }
+    if(!found){
+        Utils::exitWithMessage("Found no commit with that message.");
+    }
+}
+
+
+//checkout
+void Repository::checkoutFile(const std::string& filename){
+    Commit commit = getCurrentCommit();
+    if(!commit.in_commit(filename)){
+        Utils::exitWithMessage("File does not exist in that commit.");
+    }
+    std::string blob = commit.getBlob(filename);
+    std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + blob);
+    Utils::writeContents(filename, content);
+}
+void Repository::checkoutFileInCommit(const std::string& hash, const std::string& filename){
+    //normal commit id
+    if(hash.size() == 40){
+        //whether commit exist
+        if(!Utils::isFile(".gitlite/commits/" + hash)){
+            Utils::exitWithMessage("No commit with that id exists.");
+        }
+        //whether have filename
+        std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
+        Commit commit(str);
+        if(!commit.in_commit(filename)){
+            Utils::exitWithMessage("File does not exist in that commit.");
+        }
+        std::string blob = commit.getBlob(filename);
+        std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + blob);
+        Utils::writeContents(filename, content);
+        return;
+    }
+    //short commit id
+    std::vector<std::string> Hashes = Utils::plainFilenamesIn(".gitlite/commits");
+    size_t length = hash.length();
+    bool found = false;
+    for(auto& Hash : Hashes){
+        std::string shortHash = Hash.substr(0, length);
+        if(shortHash == hash){
+            if(!found) found = true;
+            std::string str = Utils::readContentsAsString(".gitlite/commits/" + Hash);
+            Commit commit(str);
+            if(commit.in_commit(filename)){
+                std::string blob = commit.getBlob(filename);
+                std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + blob);
+                Utils::writeContents(filename, content);
+                return;
+            }
+        }
+    }
+    if(found){
+        Utils::exitWithMessage("File does not exist in that commit.");
+    }else{
+        Utils::exitWithMessage("No commit with that id exists.");
     }
 }

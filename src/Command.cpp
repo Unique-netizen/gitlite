@@ -18,3 +18,23 @@ void Command::rm(const std::string& filename){
 void Command::commit(const std::string& message){
     Repository::commit(message);
 }
+
+void Command::log(){
+    Repository::log();
+}
+
+void Command::globalLog(){
+    Repository::globalLog();
+}
+
+void Command::find(const std::string& message){
+    Repository::find(message);
+}
+
+void Command::checkoutFile(const std::string& filename){
+    Repository::checkoutFile(filename);
+}
+
+void Command::checkoutFileInCommit(const std::string& hash, const std::string& filename){
+    Repository::checkoutFileInCommit(hash, filename);
+}

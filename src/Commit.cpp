@@ -8,7 +8,7 @@
 #include <sstream>
 
 //constructor from parent, current time and current message
-Commit::Commit(std::string str, std::string msg){
+Commit::Commit(const std::string& str, std::string msg){
     message = msg;
     auto now = std::chrono::system_clock::now();
     timestamp = std::chrono::system_clock::to_time_t(now);
@@ -29,8 +29,8 @@ Commit::Commit(std::string str, std::string msg){
         }
     }
 }
-//constructor for getting the corrent commit
-Commit::Commit(std::string str){
+//constructor from hash
+Commit::Commit(const std::string& str){
     std::istringstream stream(str);
     std::string first;
     while(stream >> first){
@@ -83,8 +83,17 @@ void Commit::computeHash(){
 
 //get
 std::string Commit::getHash(){
-    computeHash();//just in case?
+    computeHash();//just in case
     return hash;
+}
+std::string Commit::getMessage() const{
+    return message;
+}
+time_t Commit::getTimestamp() const{
+    return timestamp;
+}
+std::string Commit::getFirstParent() const{
+    return parents[0];
 }
 std::string Commit::getBlob(const std::string& filename){
     if(in_commit(filename)){
@@ -105,7 +114,7 @@ void Commit::rmFiles(std::map<std::string, int>& removal){
 }
 
 //find
-bool Commit::in_commit(const std::string& filename){
+bool Commit::in_commit(const std::string& filename) const{
     if(files.count(filename)) return true;
     return false;
 }
