@@ -100,6 +100,9 @@ std::string Commit::getBlob(const std::string& filename){
         return files[filename];
     }
 }
+std::map<std::string, std::string> Commit::getFiles() const{
+    return files;
+}
 
 //modify
 void Commit::addFiles(std::map<std::string, std::string>& addition){

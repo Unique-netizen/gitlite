@@ -38,3 +38,11 @@ void Command::checkoutFile(const std::string& filename){
 void Command::checkoutFileInCommit(const std::string& hash, const std::string& filename){
     Repository::checkoutFileInCommit(hash, filename);
 }
+
+void Command::checkoutBranch(const std::string& branchname){
+    Repository::checkoutBranch(branchname);
+}
+
+void Command::status(){
+    Repository::status();
+}

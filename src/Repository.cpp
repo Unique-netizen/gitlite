@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iostream>
 #include <ctime>
+#include <algorithm>
 
 //get commit hash of current HEAD
 std::string Repository::getHEAD(){
@@ -234,5 +235,117 @@ void Repository::checkoutFileInCommit(const std::string& hash, const std::string
         Utils::exitWithMessage("File does not exist in that commit.");
     }else{
         Utils::exitWithMessage("No commit with that id exists.");
+    }
+}
+void Repository::checkoutBranch(const std::string& branchname){
+    if(!Utils::isFile(".gitlite/branches/" + branchname)){
+        Utils::exitWithMessage("No such branch exists.");
+    }
+    if(Pointers::is_ref() && Pointers::get_ref() == branchname){
+        Utils::exitWithMessage("No need to checkout the current branch.");
+    }
+
+    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
+    std::string commithash = Utils::readContentsAsString(".gitlite/branches/" + branchname);
+    Commit commit(commithash);
+    std::map<std::string, std::string> files = commit.getFiles();
+    std::vector<std::string> files_in_workdir = Utils::plainFilenamesIn(".");
+    Commit current_commit = getCurrentCommit();
+
+    //check untracked file
+    std::map<std::string, int> untrackedFiles;
+    for(auto& file : files_in_workdir){
+        if(stage.is_in_rm(file)){
+            untrackedFiles[file] = 1;
+            continue;
+        }
+        if(!stage.is_in_add(file) && !current_commit.in_commit(file)){
+            untrackedFiles[file] = 1;
+        }
+    }
+    bool untracked = false;
+    for(auto& untrackedFile : untrackedFiles){
+        if(commit.in_commit(untrackedFile.first)){
+            untracked = true;
+            break;
+        }
+    }
+    if(untracked){
+        Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
+    }
+
+    //delete
+    for(auto& file : files_in_workdir){
+        if(untrackedFiles.count(file)) continue;
+        Utils::restrictedDelete(file);
+    }
+    //write
+    for(auto& file : files){
+        std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + file.second);
+        Utils::writeContents(file.first, content);
+    }
+    Utils::writeContents(".gitlite/HEAD", "ref: .gitlite/branches/" + branchname);
+    stage.clear();
+}
+
+
+//status
+void Repository::status(){
+    //branches
+    std::vector<std::string> branches = Pointers::getBranches();
+    std::sort(branches.begin(), branches.end());
+    std::string current = "";
+    if(Pointers::is_ref()){
+        current = Pointers::get_ref();
+    }
+    std::cout<<"=== Branches ===\n";
+    for(auto& branch : branches){
+        if(branch == current){
+            std::cout<<"*"<<branch<<"\n";
+        }else{
+            std::cout<<branch<<"\n";
+        }
+    }
+    std::cout<<"\n";
+
+    //stage
+    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
+    //staged files
+    std::map<std::string, std::string> addition = stage.getAdd();//map is ordered
+    std::cout<<"=== Staged Files ===\n";
+    for(auto& add : addition){
+        std::cout<<add.first<<"\n";
+    }
+    std::cout<<"\n";
+    //removed files
+    std::map<std::string, int> removal = stage.getRm();
+    std::cout<<"=== Removed Files ===\n";
+    for(auto& rm : removal){
+        std::cout<<rm.first<<"\n";
+    }
+    std::cout<<"\n";
+
+    //Modifications Not Staged For Commit
+    std::cout<<"=== Modifications Not Staged For Commit ===\n";
+
+    std::cout<<"\n";
+
+    //Untracked Files
+    Commit commit = getCurrentCommit();
+    std::vector<std::string> files_in_workdir= Utils::plainFilenamesIn(".");
+    std::vector<std::string> untrackedFiles;
+    for(auto& file : files_in_workdir){
+        if(stage.is_in_rm(file)){
+            untrackedFiles.push_back(file);
+            continue;
+        }
+        if(!stage.is_in_add(file) && !commit.in_commit(file)){
+            untrackedFiles.push_back(file);
+        }
+    }
+    std::sort(untrackedFiles.begin(), untrackedFiles.end());
+    std::cout<<"=== Untracked Files ===\n";
+    for(auto& untrackedFile : untrackedFiles){
+        std::cout<<untrackedFile<<"\n";
     }
 }

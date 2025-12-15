@@ -14,5 +14,7 @@ public:
     static void find(const std::string& message);
     static void checkoutFile(const std::string& filename);
     static void checkoutFileInCommit(const std::string& hash, const std::string& filename);
+    static void checkoutBranch(const std::string& branchname);
+    static void status();
 };
 #endif
