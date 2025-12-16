@@ -17,7 +17,7 @@ std::string Repository::getHEAD(){
     std::string head = Utils::readContentsAsString(".gitlite/HEAD");
     size_t pos = head.find("ref: ");
     if(pos != std::string::npos){
-        std::string branch = head.substr(4);
+        std::string branch = head.substr(5);
         head = Utils::readContentsAsString(branch);
     }
     return head;
@@ -27,6 +27,10 @@ Commit Repository::getCurrentCommit(){
     std::string hash = getHEAD();
     std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
     return Commit(str);
+}
+//get current stage
+Stage Repository::getCurrentStage(){
+    return Stage(Utils::readContentsAsString(".gitlite/stage"));
 }
 
 
@@ -57,7 +61,7 @@ void Repository::add(const std::string& filename){
         Utils::exitWithMessage("File does not exist.");
     }
 
-    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
+    Stage stage = getCurrentStage();
 
     std::vector<unsigned char> blobContent = Utils::readContents(filename);
     std::string hash = Utils::sha1(blobContent);
@@ -79,7 +83,7 @@ void Repository::add(const std::string& filename){
     stage.writeStageFile();
 }
 void Repository::rm(const std::string& filename){
-    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
+    Stage stage = getCurrentStage();
 
     //get current commit
     Commit currentCommit = getCurrentCommit();
@@ -104,7 +108,7 @@ void Repository::commit(const std::string& message){
     std::string parentStr = Utils::readContentsAsString(".gitlite/commits/" + HEAD);
     Commit commit(parentStr, message);
     //stage
-    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
+    Stage stage = getCurrentStage();
     std::map<std::string, std::string> addition = stage.getAdd();
     std::map<std::string, int> removal = stage.getRm();
     stage.clear();
@@ -237,17 +241,10 @@ void Repository::checkoutFileInCommit(const std::string& hash, const std::string
         Utils::exitWithMessage("No commit with that id exists.");
     }
 }
-void Repository::checkoutBranch(const std::string& branchname){
-    if(!Utils::isFile(".gitlite/branches/" + branchname)){
-        Utils::exitWithMessage("No such branch exists.");
-    }
-    if(Pointers::is_ref() && Pointers::get_ref() == branchname){
-        Utils::exitWithMessage("No need to checkout the current branch.");
-    }
-
-    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
-    std::string commithash = Utils::readContentsAsString(".gitlite/branches/" + branchname);
-    Commit commit(commithash);
+//helper function to checkout a commit (check untracked file, delete and write, and clear stage)
+void Repository::checkoutCommit(const std::string& hash){
+    Stage stage = getCurrentStage();
+    Commit commit(hash);
     std::map<std::string, std::string> files = commit.getFiles();
     std::vector<std::string> files_in_workdir = Utils::plainFilenamesIn(".");
     Commit current_commit = getCurrentCommit();
@@ -284,8 +281,20 @@ void Repository::checkoutBranch(const std::string& branchname){
         std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + file.second);
         Utils::writeContents(file.first, content);
     }
-    Utils::writeContents(".gitlite/HEAD", "ref: .gitlite/branches/" + branchname);
+
     stage.clear();
+}
+void Repository::checkoutBranch(const std::string& branchname){
+    if(!Utils::isFile(".gitlite/branches/" + branchname)){
+        Utils::exitWithMessage("No such branch exists.");
+    }
+    if(Pointers::is_ref() && Pointers::get_ref() == branchname){
+        Utils::exitWithMessage("No need to checkout the current branch.");
+    }
+
+    std::string commithash = Utils::readContentsAsString(".gitlite/branches/" + branchname);
+    checkoutCommit(commithash);
+    Utils::writeContents(".gitlite/HEAD", "ref: .gitlite/branches/" + branchname);
 }
 
 
@@ -309,7 +318,7 @@ void Repository::status(){
     std::cout<<"\n";
 
     //stage
-    Stage stage(Utils::readContentsAsString(".gitlite/stage"));
+    Stage stage = getCurrentStage();
     //staged files
     std::map<std::string, std::string> addition = stage.getAdd();//map is ordered
     std::cout<<"=== Staged Files ===\n";
@@ -348,4 +357,37 @@ void Repository::status(){
     for(auto& untrackedFile : untrackedFiles){
         std::cout<<untrackedFile<<"\n";
     }
+}
+
+
+void Repository::branch(const std::string& branchname){
+    std::string path = Utils::join(".gitlite/branches/", branchname);
+    if(Utils::isFile(path)){
+        Utils::exitWithMessage("A branch with that name already exists.");
+    }
+    std::string hash = getHEAD();
+    Utils::writeContents(path, hash);
+}
+void Repository::rmBranch(const std::string& branchname){
+    std::string path = Utils::join(".gitlite/branches/", branchname);
+    if(!Utils::isFile(path)){
+        Utils::exitWithMessage("A branch with that name does not exist.");
+    }
+    if(Pointers::is_ref() && Pointers::get_ref() == branchname){
+        Utils::exitWithMessage("Cannot remove the current branch.");
+    }
+    Utils::restrictedDelete(path);
+}
+void Repository::reset(const std::string& hash){
+    std::string commit_path = Utils::join(".gitlite/commits/", hash);
+    if(!Utils::isFile(commit_path)){
+        Utils::exitWithMessage("No commit with that id exists.");
+    }
+    checkoutCommit(hash);
+    if(Pointers::is_ref()){
+        std::string ref = Pointers::get_ref();
+        Utils::writeContents(".gitlite/branches/" + ref, hash);
+        return;
+    }
+    Utils::writeContents(".gitlite/HEAD", hash);
 }

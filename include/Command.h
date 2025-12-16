@@ -16,5 +16,8 @@ public:
     static void checkoutFileInCommit(const std::string& hash, const std::string& filename);
     static void checkoutBranch(const std::string& branchname);
     static void status();
+    static void branch(const std::string& branchname);
+    static void rmBranch(const std::string& branchname);
+    static void reset(const std::string& hash);
 };
 #endif

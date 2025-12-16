@@ -46,3 +46,15 @@ void Command::checkoutBranch(const std::string& branchname){
 void Command::status(){
     Repository::status();
 }
+
+void Command::branch(const std::string& branchname){
+    Repository::branch(branchname);
+}
+
+void Command::rmBranch(const std::string& branchname){
+    Repository::rmBranch(branchname);
+}
+
+void Command::reset(const std::string& hash){
+    Repository::reset(hash);
+}
