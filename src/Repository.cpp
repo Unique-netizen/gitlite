@@ -13,6 +13,11 @@
 #include <algorithm>
 #include <queue>
 
+
+std::string Repository::getGitliteDir(){
+    return ".gitlite";
+}
+
 //get commit hash of current HEAD
 std::string Repository::getHEAD(){
     std::string head = Utils::readContentsAsString(".gitlite/HEAD");

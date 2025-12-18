@@ -12,6 +12,7 @@ class Repository{
     static Stage getCurrentStage();
     static void checkoutCommit(const std::string& hash);//helper function to checkout a commit
 public:
+    static std::string getGitliteDir();
     static void initialize();
     static void add(const std::string& filename);
     static void rm(const std::string& filename);
