@@ -8,10 +8,11 @@
 #include <sstream>
 
 //constructor from hash
-Commit::Commit(const std::string& str){
-    size_t posn = str.find("\n");
-    message = str.substr(9, posn - 9);//"message: " length is 9
-    std::istringstream stream(str.substr(posn + 1));
+Commit::Commit(const std::string& commitHash){
+    std::string commitStr = Utils::readContentsAsString(".gitlite/commits/" + commitHash);
+    size_t posn = commitStr.find("\n");
+    message = commitStr.substr(9, posn - 9);//"message: " length is 9
+    std::istringstream stream(commitStr.substr(posn + 1));
     std::string first;
     while(stream >> first){
         std::string second;

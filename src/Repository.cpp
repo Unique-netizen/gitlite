@@ -31,8 +31,7 @@ std::string Repository::getHEAD(){
 //get current commit
 Commit Repository::getCurrentCommit(){
     std::string hash = getHEAD();
-    std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
-    return Commit(str);
+    return Commit(hash);
 }
 //get current stage
 Stage Repository::getCurrentStage(){
@@ -111,8 +110,7 @@ void Repository::commit(const std::string& message, bool isMerge, std::string me
     //get parent commit from HEAD
     std::string parentHash = getHEAD();
     //construct current from parent
-    std::string parentStr = Utils::readContentsAsString(".gitlite/commits/" + parentHash);
-    Commit commit(parentStr);
+    Commit commit(parentHash);
     commit.setMessage(message);
     commit.setTime();
     if(mergeParent.empty()){
@@ -171,8 +169,7 @@ void formatOutput(const std::string& hash, const Commit& commit){
 }
 //helper function to output branch
 void outputBranch(const std::string hash){
-    std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
-    Commit commit(str);
+    Commit commit(hash);
     formatOutput(hash, commit);
     if(commit.getMessage() == "initial commit") return;
     std::string nextHash = commit.getFirstParent();
@@ -185,8 +182,7 @@ void Repository::log(){
 void Repository::globalLog(){
     std::vector<std::string> hashes = Utils::plainFilenamesIn(".gitlite/commits");
     for(auto& hash : hashes){
-        std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
-        Commit commit(str);
+        Commit commit(hash);
         formatOutput(hash, commit);
     }
 }
@@ -195,8 +191,7 @@ void Repository::find(const std::string& message){
     std::vector<std::string> hashes = Utils::plainFilenamesIn(".gitlite/commits");
     bool found = false;
     for(auto& hash : hashes){
-        std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
-        Commit commit(str);
+        Commit commit(hash);
         if(commit.getMessage() == message){
             std::cout<<hash<<"\n";
             if(!found) found = true;
@@ -226,8 +221,7 @@ void Repository::checkoutFileInCommit(const std::string& hash, const std::string
             Utils::exitWithMessage("No commit with that id exists.");
         }
         //whether have filename
-        std::string str = Utils::readContentsAsString(".gitlite/commits/" + hash);
-        Commit commit(str);
+        Commit commit(hash);
         if(!commit.in_commit(filename)){
             Utils::exitWithMessage("File does not exist in that commit.");
         }
@@ -244,8 +238,7 @@ void Repository::checkoutFileInCommit(const std::string& hash, const std::string
         std::string shortHash = Hash.substr(0, length);
         if(shortHash == hash){
             if(!found) found = true;
-            std::string str = Utils::readContentsAsString(".gitlite/commits/" + Hash);
-            Commit commit(str);
+            Commit commit(Hash);
             if(commit.in_commit(filename)){
                 std::string blob = commit.getBlob(filename);
                 std::vector<unsigned char> content = Blob::readBlobContents(blob);
