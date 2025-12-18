@@ -20,6 +20,6 @@ std::string Pointers::get_ref(){
 
 
 //branches
-std::vector<std::string> getBranches(){
+std::vector<std::string> Pointers::getBranches(){
     return Utils::plainFilenamesIn(".gitlite/branches");
 }

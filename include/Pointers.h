@@ -8,7 +8,7 @@ public:
     //HEAD
     static bool is_ref();
     static std::string get_ref();
-    static void set_head(std::string& head);
+    //static void set_head(std::string& head);
     //branches
     static std::vector<std::string> getBranches();
 };
