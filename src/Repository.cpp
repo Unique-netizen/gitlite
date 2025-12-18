@@ -104,7 +104,7 @@ void Repository::rm(const std::string& filename){
     }
 }
 
-void Repository::commit(const std::string& message, bool isMerge = false, std::string mergeParent = ""){
+void Repository::commit(const std::string& message, bool isMerge, std::string mergeParent){
     if(message.empty()){
         Utils::exitWithMessage("Please enter a commit message.");
     }
