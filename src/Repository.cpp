@@ -11,6 +11,7 @@
 #include <iostream>
 #include <ctime>
 #include <algorithm>
+#include <queue>
 
 //get commit hash of current HEAD
 std::string Repository::getHEAD(){
@@ -98,26 +99,33 @@ void Repository::rm(const std::string& filename){
     }
 }
 
-void Repository::commit(const std::string& message){
+void Repository::commit(const std::string& message, bool isMerge = false, std::string mergeParent = ""){
     if(message.empty()){
         Utils::exitWithMessage("Please enter a commit message.");
     }
     //get parent commit from HEAD
-    std::string HEAD = getHEAD();
+    std::string parentHash = getHEAD();
     //construct current from parent
-    std::string parentStr = Utils::readContentsAsString(".gitlite/commits/" + HEAD);
-    Commit commit(parentStr, message);
+    std::string parentStr = Utils::readContentsAsString(".gitlite/commits/" + parentHash);
+    Commit commit(parentStr);
+    commit.setMessage(message);
+    commit.setTime();
+    if(mergeParent.empty()){
+        commit.resetParent(parentHash);
+    }else{
+        commit.addParent(mergeParent);
+    }
     //stage
     Stage stage = getCurrentStage();
     std::map<std::string, std::string> addition = stage.getAdd();
     std::map<std::string, int> removal = stage.getRm();
-    stage.clear();
     //modify commit
-    if(addition.empty() && removal.empty()){
+    if(!isMerge && addition.empty() && removal.empty()){
         Utils::exitWithMessage("No changes added to the commit.");
     }
     commit.addFiles(addition);
     commit.rmFiles(removal);
+    stage.clear();
     //writefile
     commit.writeCommitFile();
     //reset HEAD
@@ -144,9 +152,15 @@ void formatOutput(const std::string& hash, const Commit& commit){
     std::string message = commit.getMessage();
     time_t timestamp = commit.getTimestamp();
     std::string outputTime = formatTime(timestamp);
+    std::vector<std::string> parents = commit.getParents();
 
     std::cout << "===\n";
     std::cout << "commit " << hash << "\n";
+    if(parents.size() > 1){
+        std::string p1 = parents[0].substr(0, 7);
+        std::string p2 = parents[1].substr(0, 7);
+        std::cout << "Merge: " << p1 << " " << p2 << "\n";
+    }
     std::cout << "Date: " << outputTime << "\n";
     std::cout << message << "\n\n";
 }
@@ -196,7 +210,7 @@ void Repository::checkoutFile(const std::string& filename){
         Utils::exitWithMessage("File does not exist in that commit.");
     }
     std::string blob = commit.getBlob(filename);
-    std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + blob);
+    std::vector<unsigned char> content = Blob::readBlobContents(blob);
     Utils::writeContents(filename, content);
 }
 void Repository::checkoutFileInCommit(const std::string& hash, const std::string& filename){
@@ -213,7 +227,7 @@ void Repository::checkoutFileInCommit(const std::string& hash, const std::string
             Utils::exitWithMessage("File does not exist in that commit.");
         }
         std::string blob = commit.getBlob(filename);
-        std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + blob);
+        std::vector<unsigned char> content = Blob::readBlobContents(blob);
         Utils::writeContents(filename, content);
         return;
     }
@@ -229,7 +243,7 @@ void Repository::checkoutFileInCommit(const std::string& hash, const std::string
             Commit commit(str);
             if(commit.in_commit(filename)){
                 std::string blob = commit.getBlob(filename);
-                std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + blob);
+                std::vector<unsigned char> content = Blob::readBlobContents(blob);
                 Utils::writeContents(filename, content);
                 return;
             }
@@ -278,7 +292,7 @@ void Repository::checkoutCommit(const std::string& hash){
     }
     //write
     for(auto& file : files){
-        std::vector<unsigned char> content = Utils::readContents(".gitlite/blobs/" + file.second);
+        std::vector<unsigned char> content = Blob::readBlobContents(file.second);
         Utils::writeContents(file.first, content);
     }
 
@@ -390,4 +404,155 @@ void Repository::reset(const std::string& hash){
         return;
     }
     Utils::writeContents(".gitlite/HEAD", hash);
+}
+
+
+//merge
+//helper function to get LCA
+Commit getLCA(const Commit& current, const Commit& given){
+    std::map<std::string, int> ancestors;
+    std::queue<std::pair<std::string, int>> q;
+    q.push({current.getHash(), 1});
+    q.push({given.getHash(), 2});
+    while(!q.empty()){
+        std::string hash = q.front().first;
+        int side = q.front().second;
+        q.pop();
+        if(ancestors.count(hash)){
+            if(ancestors[hash] == side) continue;
+            else return Commit(hash);
+        }
+        ancestors.insert({hash, side});
+        Commit c(hash);
+        std::vector<std::string> parents = c.getParents();
+        for(auto& parent : parents){
+            q.push({parent, side});
+        }
+    }
+}
+//helper function to compare changes of a commit with LCA
+void compare(std::map<std::string, std::string>& LCA_files, const Commit& commit, std::map<std::string, std::string>& modify, std::map<std::string, std::string>& same, std::map<std::string, std::string>& notin, std::map<std::string, std::string>& newin){
+    std::map<std::string, std::string> commit_files = commit.getFiles();
+    for(auto& file : commit_files){
+        std::string name = file.first;
+        std::string blobHash = file.second;
+        if(LCA_files.count(name)){//in LCA
+            if(blobHash == LCA_files[name]) same[name] = blobHash;//same as LCA
+            else modify[name] = blobHash;//modified
+        }else{//new in the commit
+            newin[name] = blobHash;
+        }
+    }
+    for(auto& file : LCA_files){//check for LCA files that are not in the commit
+        if(!commit_files.count(file.first)) notin[file.first] = file.second;
+    }
+}
+//helper function to write conflict file
+void writeConflict(const std::string& filepath, const std::string& current_content, const std::string& given_content){
+    std::string content;
+    content += "<<<<<<< HEAD\n";
+    content += current_content;
+    if(!current_content.empty() && current_content.back() != '\n'){
+        content += "\n";
+    }
+    content += "=======\n";
+    content += given_content;
+    if(!given_content.empty() && given_content.back() != '\n'){
+        content += "\n";
+    }
+    content += ">>>>>>>\n";
+    Utils::writeContents(filepath, content);
+}
+void Repository::merge(const std::string& branchname){
+    Stage stage = getCurrentStage();
+    std::map<std::string, std::string> addition = stage.getAdd();
+    std::map<std::string, int> removal = stage.getRm();
+    if(!addition.empty() || !removal.empty()){
+        Utils::exitWithMessage("You have uncommitted changes.");
+    }
+    std::string branchPath = Utils::join(".gitlite/branches/", branchname);
+    if(!Utils::isFile(branchPath)){
+        Utils::exitWithMessage("A branch with that name does not exist.");
+    }
+    std::string current_branch = Pointers::get_ref();
+    if(branchname == current_branch){
+        Utils::exitWithMessage("Cannot merge a branch with itself.");
+    }
+
+    std::string given_commit_hash = Utils::readContentsAsString(branchPath);
+    Commit current = getCurrentCommit();
+    Commit given(given_commit_hash);
+    Commit LCA = getLCA(current, given);
+
+    if(LCA.getHash() == given.getHash()) Utils::exitWithMessage("Given branch is an ancestor of the current branch.");
+    if(LCA.getHash() == current.getHash()){
+        checkoutCommit(given_commit_hash);
+        Utils::writeContents(".gitlite/branches/" + current_branch, given_commit_hash);
+        Utils::exitWithMessage("Current branch fast-forwarded.");
+    }
+
+//compare current and given with LCA
+    std::map<std::string, std::string> LCA_files = LCA.getFiles();
+    std::map<std::string, std::string> modify_in_current, same_in_current, not_in_current, new_in_current;
+    std::map<std::string, std::string> modify_in_given, same_in_given, not_in_given, new_in_given;
+    compare(LCA_files, current, modify_in_current, same_in_current, not_in_current, new_in_current);
+    compare(LCA_files, given, modify_in_given, same_in_given, not_in_given, new_in_given);
+
+    bool conflict = false;
+//cases (2 3 4 7 are doing nothing)
+    //for files in LCA
+    for(auto& file : LCA_files){
+        std::string name = file.first;
+        if(modify_in_given.count(name) && same_in_current.count(name)){//case 1
+            checkoutFileInCommit(given_commit_hash, name);
+            add(name);
+        }else if(same_in_current.count(name) && not_in_given.count(name)){//case 6
+            rm(name);
+        }else if(modify_in_current.count(name) && modify_in_given.count(name)){//conflicts
+            std::string current_blob_hash = modify_in_current[name];
+            std::string given_blob_hash = modify_in_given[name];
+            if(current_blob_hash == given_blob_hash) continue;
+            conflict = true;
+            std::string current_content = Blob::readBlobContentsAsString(current_blob_hash);
+            std::string given_content = Blob::readBlobContentsAsString(given_blob_hash);
+            writeConflict(name, current_content, given_content);
+        }else if(modify_in_current.count(name) && not_in_given.count(name)){
+            conflict = true;
+            std::string current_blob_hash = modify_in_current[name];
+            std::string current_content = Blob::readBlobContentsAsString(current_blob_hash);
+            std::string given_content = "";
+            writeConflict(name, current_content, given_content);
+        }else if(modify_in_given.count(name) && not_in_current.count(name)){
+            conflict = true;
+            std::string current_content = "";
+            std::string given_blob_hash = modify_in_given[name];
+            std::string given_content = Blob::readBlobContentsAsString(given_blob_hash);
+            writeConflict(name, current_content, given_content);
+        }
+    }
+    //for new files
+    for(auto& file : new_in_given){
+        std::string name = file.first;
+        if(!new_in_current.count(name)){//case 5
+            checkoutFileInCommit(given_commit_hash, name);
+            add(name);
+        }else{//conflict
+            std::string current_blob_hash = new_in_current[name];
+            std::string given_blob_hash = new_in_given[name];
+            if(current_blob_hash == given_blob_hash) continue;
+            conflict = true;
+            std::string current_content = Blob::readBlobContentsAsString(current_blob_hash);
+            std::string given_content = Blob::readBlobContentsAsString(given_blob_hash);
+            writeConflict(name, current_content, given_content);
+        }
+    }
+
+//commit
+    std::string current_commit_hash = getHEAD();
+    std::string message = "Merged " + branchname + " into " + Pointers::get_ref() + ".";
+    commit(message, true, given_commit_hash);
+
+    if(conflict){
+        Utils::message("Encountered a merge conflict.");
+    }
 }

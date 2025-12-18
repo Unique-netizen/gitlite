@@ -19,5 +19,6 @@ public:
     static void branch(const std::string& branchname);
     static void rmBranch(const std::string& branchname);
     static void reset(const std::string& hash);
+    static void merge(const std::string& branchname);
 };
 #endif

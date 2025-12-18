@@ -58,3 +58,7 @@ void Command::rmBranch(const std::string& branchname){
 void Command::reset(const std::string& hash){
     Repository::reset(hash);
 }
+
+void Command::merge(const std::string& branchname){
+    Repository::merge(branchname);
+}

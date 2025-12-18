@@ -15,7 +15,7 @@ public:
     static void initialize();
     static void add(const std::string& filename);
     static void rm(const std::string& filename);
-    static void commit(const std::string& message);
+    static void commit(const std::string& message, bool is_merge = false, std::string mergeParent = "");
     static void log();
     static void globalLog();
     static void find(const std::string& message);
@@ -26,5 +26,6 @@ public:
     static void branch(const std::string& branchname);
     static void rmBranch(const std::string& branchname);
     static void reset(const std::string& hash);
+    static void merge(const std::string& branchname);
 };
 #endif // REPOSITORY_H
