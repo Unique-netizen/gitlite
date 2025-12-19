@@ -554,18 +554,21 @@ void Repository::merge(const std::string& branchname){
             std::string current_content = Blob::readBlobContentsAsString(current_blob_hash);
             std::string given_content = Blob::readBlobContentsAsString(given_blob_hash);
             writeConflict(name, current_content, given_content);
+            add(name);
         }else if(modify_in_current.count(name) && not_in_given.count(name)){
             conflict = true;
             std::string current_blob_hash = modify_in_current[name];
             std::string current_content = Blob::readBlobContentsAsString(current_blob_hash);
             std::string given_content = "";
             writeConflict(name, current_content, given_content);
+            add(name);
         }else if(modify_in_given.count(name) && not_in_current.count(name)){
             conflict = true;
             std::string current_content = "";
             std::string given_blob_hash = modify_in_given[name];
             std::string given_content = Blob::readBlobContentsAsString(given_blob_hash);
             writeConflict(name, current_content, given_content);
+            add(name);
         }
     }
     //for new files
@@ -582,6 +585,7 @@ void Repository::merge(const std::string& branchname){
             std::string current_content = Blob::readBlobContentsAsString(current_blob_hash);
             std::string given_content = Blob::readBlobContentsAsString(given_blob_hash);
             writeConflict(name, current_content, given_content);
+            add(name);
         }
     }
 
