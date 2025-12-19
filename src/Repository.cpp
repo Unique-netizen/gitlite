@@ -101,6 +101,8 @@ void Repository::rm(const std::string& filename){
     }else{
         Utils::exitWithMessage("No reason to remove the file.");
     }
+
+    stage.writeStageFile();
 }
 
 void Repository::commit(const std::string& message, bool isMerge, std::string mergeParent){
@@ -347,13 +349,48 @@ void Repository::status(){
     std::cout<<"\n";
 
     //Modifications Not Staged For Commit
+    Commit commit = getCurrentCommit();
+    std::map<std::string, std::string> files_in_commit = commit.getFiles();
+    std::vector<std::string> files_in_workdir= Utils::plainFilenamesIn(".");
+    std::map<std::string, int> modNotStaged;//0 marks delete, 1 marks modify
+    std::map<std::string, std::string> file_contents_in_workdir;
+    for(auto& file : files_in_workdir){
+        std::string content = Utils::readContentsAsString(file);
+        file_contents_in_workdir[file] = content;
+    }
+    for(auto& file : files_in_commit){
+        std::string name = file.first;
+        if(file_contents_in_workdir.count(name) && file_contents_in_workdir[name] != files_in_commit[name] && stage.is_in_add(name)){
+            modNotStaged[name] = 1;
+        }
+        if(!file_contents_in_workdir.count(name) && !stage.is_in_rm(name)){
+            modNotStaged[name] = 0;
+        }
+    }
+    for(auto& file : addition){
+        std::string name = file.first;
+        //second is blob hash
+        if(file_contents_in_workdir.count(name)){
+            std::string content_in_addition = Blob::readBlobContentsAsString(addition[name]);
+            if(content_in_addition != file_contents_in_workdir[name]){
+                modNotStaged[name] = 1;
+            }
+        }else{
+            modNotStaged[name] = 0;
+        }
+    }
     std::cout<<"=== Modifications Not Staged For Commit ===\n";
-
+    for(auto& file : modNotStaged){
+        std::cout<<file.first;
+        if(file.second == 0){
+            std::cout<<" (deleted)\n";
+        }else{
+            std::cout<<" (modified)\n";
+        }
+    }
     std::cout<<"\n";
 
     //Untracked Files
-    Commit commit = getCurrentCommit();
-    std::vector<std::string> files_in_workdir= Utils::plainFilenamesIn(".");
     std::vector<std::string> untrackedFiles;
     for(auto& file : files_in_workdir){
         if(stage.is_in_rm(file)){
