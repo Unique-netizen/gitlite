@@ -78,6 +78,9 @@ void Repository::add(const std::string& filename){
         if(stage.is_in_add(filename)){
             stage.deleteAdd(filename);
         }
+        if(stage.is_in_rm(filename)){
+            stage.deleteRm(filename);
+        }
     }else if(stage.is_in_rm(filename)){
         stage.deleteRm(filename);
         stage.add(filename, hash);
