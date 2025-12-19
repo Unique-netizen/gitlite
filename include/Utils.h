@@ -50,6 +50,7 @@ public:
 
     // File operations
     static bool restrictedDelete(const std::string& filepath);
+    static bool simpleDelete(const std::string& filepath);
     static std::vector<unsigned char> readContents(const std::string& filepath);
     static std::string readContentsAsString(const std::string& filepath);
     static void writeContents(const std::string& filepath, const std::string& content);

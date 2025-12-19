@@ -428,7 +428,7 @@ void Repository::rmBranch(const std::string& branchname){
     if(Pointers::is_ref() && Pointers::get_ref() == branchname){
         Utils::exitWithMessage("Cannot remove the current branch.");
     }
-    Utils::restrictedDelete(path);
+    Utils::simpleDelete(path);
 }
 void Repository::reset(const std::string& hash){
     std::string commit_path = Utils::join(".gitlite/commits/", hash);

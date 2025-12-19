@@ -168,6 +168,14 @@ bool Utils::restrictedDelete(const std::string& filepath) {
     }
     return false;
 }
+/** Deletes FILE if it exists and is not a directory.  Returns true
+*  if FILE was deleted, and false otherwise. */
+bool Utils::simpleDelete(const std::string& filepath) {
+    if (isFile(filepath)) {
+        return remove(filepath.c_str()) == 0;
+    }
+    return false;
+}
 
  /* READING AND WRITING FILE CONTENTS */
 /** Return the entire contents of FILE as a byte array.  FILE must
