@@ -1,9 +1,4 @@
-samples/1-add-01.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: Illegal instruction
-
-samples/1-add-02.in: 
+samples/3-status-05.in: 
 status: 
 Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
 Actual: === Branches ===
@@ -12,224 +7,86 @@ Actual: === Branches ===
 === Staged Files ===
 
 === Removed Files ===
+f.txt
 
 === Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-
-samples/2-checkout-01.in: 
-checkout -- wug.txt: 
-Expected: []
-Actual: File does not exist in that commit.
-
-samples/2-checkout-02.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/2-find-01.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/2-find-02.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/2-global-log-01.in: 
-log: 
-Expected: ['(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))']
-Actual: Segmentation fault
-
-samples/2-log.in: 
-log: 
-Expected: ['===', 'commit [a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'added wug', '', '===', 'commit [a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-checkout-03.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-checkout-04.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-checkout-05.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]{8})[a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]{8})[a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]{8})[a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-status-01.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-e7dadbd3279bd780f047c3983af61ccfe9d04df5 (deleted)
 
 === Untracked Files ===
 f.txt
-g.txt
-
-samples/3-status-02.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', 'f.txt', 'g.txt', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: Illegal instruction
-
-samples/3-status-03.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/3-status-04.in: 
-status: 
-Expected: ['=== Branches ===', '\\*master', '', '=== Staged Files ===', 'g.txt', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '(?:(?:.|\\n)*(?:\\n|\\Z)|\\A|\\Z)', '']
-Actual: Illegal instruction
-
-samples/3-status-05.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/3-status-06.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/3-status.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-
-samples/4-branch-01.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/4-branch-03.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/4-find-03.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/4-global-log-02.in: 
-log: 
-Expected: ['(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))']
-Actual: Segmentation fault
-
-samples/4-reset-01.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/4-reset-02.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
 
 samples/4-rm-branch-01.in: 
-checkout other: 
+rm-branch other: 
 Expected: []
 Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
+  what():  not .gitlite working directory
 Aborted
-
-samples/4-rm-branch-02.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/5-merge-01.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
 
 samples/5-merge-02.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
+log: 
+Expected: ['(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '===', 'commit 652163dac8eedc945923a5275981266991f5764c', '(?:(?:.|\\n)*(?:\\n|\\Z)|\\A|\\Z)']
+Actual: ===
+commit 1b199fea726e87eb63fb20e5d5d8317f2569d436
+Merge: 295c094 fb9a5bb
+Date: Fri Dec 19 14:23:22 2025 +0800
+Merged other into master.
+
+===
+commit 295c09480754a786a2cacae0c7b16becc7554870
+Date: Fri Dec 19 14:23:22 2025 +0800
+Two files
+
+===
+commit 0c6924093490503ce52ef09fd615e01bf69270ab
+Date: Thu Jan 01 08:00:00 1970 +0800
+initial commit
+
 
 samples/5-merge-03.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
+log: 
+Expected: ['(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '===', 'commit 652163dac8eedc945923a5275981266991f5764c', '(?:(?:.|\\n)*(?:\\n|\\Z)|\\A|\\Z)']
+Actual: ===
+commit cd275c15e0129747e5dd0df6d104a6c77cb2f1cf
+Merge: 295c094 fa68528
+Date: Fri Dec 19 14:23:22 2025 +0800
+Merged other into master.
+
+===
+commit 295c09480754a786a2cacae0c7b16becc7554870
+Date: Fri Dec 19 14:23:22 2025 +0800
+Two files
+
+===
+commit 0c6924093490503ce52ef09fd615e01bf69270ab
+Date: Thu Jan 01 08:00:00 1970 +0800
+initial commit
+
 
 samples/5-merge-04.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/5-merge-05.in: 
-checkout B1: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/5-merge-06.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
+merge other: 
+Expected: ['There is an untracked file in the way; delete it, or add and commit it first.']
+Actual: 
 samples/5-merge-07.in: 
-checkout given: 
+commit "Reset f to notwug.txt": 
 Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/5-merge-08.in: 
-rm C.txt: 
-Expected: []
-Actual: No reason to remove the file.
+Actual: No changes added to the commit.
 
 samples/6-remote-01.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'Two files', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
+checkout R1/master: 
+Expected: []
+Actual: No such branch exists.
 
 samples/6-remote-02.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'Two files', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
+reset 295c09480754a786a2cacae0c7b16becc7554870: 
+Expected: []
+Actual: No commit with that id exists.
 
 samples/6-remote-03.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'Two files', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
+add-remote R1 ../D1/.gitlite: 
+Expected: ['A remote with that name already exists.']
+Actual: 
 samples/6-status-05.in: 
 status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', 'f.txt', '']
+Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', 'f.txt (modified)', '', '=== Untracked Files ===', '']
 Actual: === Branches ===
 *master
 
@@ -238,289 +95,6 @@ Actual: === Branches ===
 === Removed Files ===
 
 === Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
 
 === Untracked Files ===
-f.txt
-
-samples/1-add-01.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-f.txt
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-25145bd0533f70b4b96eafd52522f843b45bfbdb (deleted)
-
-=== Untracked Files ===
-g.txt
-
-samples/1-add-02.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-
-samples/2-checkout-01.in: 
-checkout -- wug.txt: 
-Expected: []
-Actual: File does not exist in that commit.
-
-samples/2-checkout-02.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/2-find-01.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/2-find-02.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/2-global-log-01.in: 
-log: 
-Expected: ['(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))']
-Actual: Segmentation fault
-
-samples/2-log.in: 
-log: 
-Expected: ['===', 'commit [a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'added wug', '', '===', 'commit [a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-checkout-03.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]+)', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-checkout-04.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-checkout-05.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]{8})[a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 2 of wug.txt', '', '===', 'commit ([a-f0-9]{8})[a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'version 1 of wug.txt', '', '===', 'commit ([a-f0-9]{8})[a-f0-9]+', 'Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/3-status-01.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-2e300ceea2b6f3d2900ee3f1aaf37b0679b05ebb (deleted)
-
-=== Untracked Files ===
-f.txt
-g.txt
-
-samples/3-status-02.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', 'f.txt', 'g.txt', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-f.txt
-g.txt
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-
-samples/3-status-03.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/3-status-04.in: 
-status: 
-Expected: ['=== Branches ===', '\\*master', '', '=== Staged Files ===', 'g.txt', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '(?:(?:.|\\n)*(?:\\n|\\Z)|\\A|\\Z)', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-g.txt
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-f.txt
-
-samples/3-status-05.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/3-status-06.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/3-status.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-
-samples/4-branch-01.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/4-branch-03.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/4-find-03.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/4-global-log-02.in: 
-log: 
-Expected: ['(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))', '(===[ ]*\\ncommit [a-f0-9]+[ ]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d) [-+](\\d\\d\\d\\d[ ]*\\n(?:.|\\n)*?(?=\\Z|\\n===))']
-Actual: Segmentation fault
-
-samples/4-reset-01.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/4-reset-02.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/4-rm-branch-01.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/4-rm-branch-02.in: 
-checkout other: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/5-merge-01.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/5-merge-02.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/5-merge-03.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/5-merge-04.in: 
-rm g.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/5-merge-05.in: 
-checkout B1: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/5-merge-06.in: 
-rm f.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/5-merge-07.in: 
-checkout given: 
-Expected: []
-Actual: terminate called after throwing an instance of 'std::invalid_argument'
-  what():  must be a normal file
-Aborted
-
-samples/5-merge-08.in: 
-rm C.txt: 
-Expected: []
-Actual: No reason to remove the file.
-
-samples/6-remote-01.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'Two files', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/6-remote-02.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'Two files', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/6-remote-03.in: 
-log: 
-Expected: ['===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'Two files', '', '===', 'commit ([a-f0-9]+)[ \\t]*\\n(?:Merge:\\s+[0-9a-f]{7}\\s+[0-9a-f]{7}[ ]*\\n)?Date: \\w\\w\\w \\w\\w\\w \\d+ \\d\\d:\\d\\d:\\d\\d \\d\\d\\d\\d [-+]\\d\\d\\d\\d', 'initial commit', '']
-Actual: Segmentation fault
-
-samples/6-status-05.in: 
-status: 
-Expected: ['=== Branches ===', '*master', '', '=== Staged Files ===', '', '=== Removed Files ===', '', '=== Modifications Not Staged For Commit ===', '', '=== Untracked Files ===', 'f.txt', '']
-Actual: === Branches ===
-*master
-
-=== Staged Files ===
-
-=== Removed Files ===
-
-=== Modifications Not Staged For Commit ===
-0c6924093490503ce52ef09fd615e01bf69270ab (deleted)
-
-=== Untracked Files ===
-f.txt
 

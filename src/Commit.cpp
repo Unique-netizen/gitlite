@@ -9,6 +9,7 @@
 
 //constructor from hash
 Commit::Commit(const std::string& commitHash){
+    hash = commitHash;
     std::string commitStr = Utils::readContentsAsString(".gitlite/commits/" + commitHash);
     size_t posn = commitStr.find("\n");
     message = commitStr.substr(9, posn - 9);//"message: " length is 9
