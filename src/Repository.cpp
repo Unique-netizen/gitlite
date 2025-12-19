@@ -353,29 +353,27 @@ void Repository::status(){
 
     //Modifications Not Staged For Commit
     Commit commit = getCurrentCommit();
-    std::map<std::string, std::string> files_in_commit = commit.getFiles();
-    std::vector<std::string> files_in_workdir= Utils::plainFilenamesIn(".");
+    std::map<std::string, std::string> files_in_commit = commit.getFiles();//second is hash of content
+    std::vector<std::string> files_names_in_workdir= Utils::plainFilenamesIn(".");
     std::map<std::string, int> modNotStaged;//0 marks delete, 1 marks modify
-    std::map<std::string, std::string> file_contents_in_workdir;
-    for(auto& file : files_in_workdir){
-        std::string content = Utils::readContentsAsString(file);
-        file_contents_in_workdir[file] = content;
+    std::map<std::string, std::string> files_in_workdir;//second is hash of content
+    for(auto& file : files_names_in_workdir){
+        std::vector <unsigned char> content = Utils::readContents(file);
+        files_in_workdir[file] = Utils::sha1(content);
     }
     for(auto& file : files_in_commit){
         std::string name = file.first;
-        if(file_contents_in_workdir.count(name) && file_contents_in_workdir[name] != files_in_commit[name] && stage.is_in_add(name)){
+        if(files_in_workdir.count(name) && files_in_workdir[name] != files_in_commit[name] && !stage.is_in_add(name)){
             modNotStaged[name] = 1;
         }
-        if(!file_contents_in_workdir.count(name) && !stage.is_in_rm(name)){
+        if(!files_in_workdir.count(name) && !stage.is_in_rm(name)){
             modNotStaged[name] = 0;
         }
     }
     for(auto& file : addition){
         std::string name = file.first;
-        //second is blob hash
-        if(file_contents_in_workdir.count(name)){
-            std::string content_in_addition = Blob::readBlobContentsAsString(addition[name]);
-            if(content_in_addition != file_contents_in_workdir[name]){
+        if(files_in_workdir.count(name)){
+            if(file.second != files_in_workdir[name]){
                 modNotStaged[name] = 1;
             }
         }else{
@@ -395,7 +393,7 @@ void Repository::status(){
 
     //Untracked Files
     std::vector<std::string> untrackedFiles;
-    for(auto& file : files_in_workdir){
+    for(auto& file : files_names_in_workdir){
         if(stage.is_in_rm(file)){
             untrackedFiles.push_back(file);
             continue;
