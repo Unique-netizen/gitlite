@@ -4,12 +4,14 @@
 #include "../include/Commit.h"
 #include "../include/Stage.h"
 #include <string>
+#include <map>
 
 class Repository{
     static bool is_initialized();
     static std::string getHEAD();
     static Commit getCurrentCommit();
     static Stage getCurrentStage();
+    static std::map<std::string, int> getUntrackedFiles();
     static void checkoutCommit(const std::string& hash);//helper function to checkout a commit
 public:
     static std::string getGitliteDir();

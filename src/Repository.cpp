@@ -37,7 +37,23 @@ Commit Repository::getCurrentCommit(){
 Stage Repository::getCurrentStage(){
     return Stage(Utils::readContentsAsString(".gitlite/stage"));
 }
-
+//get untracked files
+std::map<std::string, int> Repository::getUntrackedFiles(){
+    std::vector<std::string> file_names_in_workdir = Utils::plainFilenamesIn(".");
+    std::map<std::string, int> untrackedfiles;
+    Stage stage = getCurrentStage();
+    Commit commit = getCurrentCommit();
+    for(auto& name : file_names_in_workdir){
+        if(stage.is_in_rm(name)){
+            untrackedfiles[name] = 1;
+            continue;
+        }
+        if(!stage.is_in_add(name) && !commit.in_commit(name)){
+            untrackedfiles[name] = 1;
+        }
+    }
+    return untrackedfiles;
+}
 
 bool Repository::is_initialized(){
     return Utils::isDirectory(".gitlite");
@@ -118,9 +134,8 @@ void Repository::commit(const std::string& message, bool isMerge, std::string me
     Commit commit(parentHash);
     commit.setMessage(message);
     commit.setTime();
-    if(mergeParent.empty()){
-        commit.resetParent(parentHash);
-    }else{
+    commit.resetParent(parentHash);
+    if(!mergeParent.empty()){
         commit.addParent(mergeParent);
     }
     //stage
@@ -263,35 +278,26 @@ void Repository::checkoutCommit(const std::string& hash){
     Stage stage = getCurrentStage();
     Commit commit(hash);
     std::map<std::string, std::string> files = commit.getFiles();
-    std::vector<std::string> files_in_workdir = Utils::plainFilenamesIn(".");
+    std::vector<std::string> file_names_in_workdir = Utils::plainFilenamesIn(".");
     Commit current_commit = getCurrentCommit();
 
     //check untracked file
-    std::map<std::string, int> untrackedFiles;
-    for(auto& file : files_in_workdir){
-        if(stage.is_in_rm(file)){
-            untrackedFiles[file] = 1;
-            continue;
-        }
-        if(!stage.is_in_add(file) && !current_commit.in_commit(file)){
-            untrackedFiles[file] = 1;
-        }
-    }
-    bool untracked = false;
-    for(auto& untrackedFile : untrackedFiles){
-        if(commit.in_commit(untrackedFile.first)){
-            untracked = true;
+    std::map<std::string,int> untrackedfiles = getUntrackedFiles();
+    bool willCover = false;
+    for(auto& file : untrackedfiles){
+        if(commit.in_commit(file.first)){
+            willCover = true;
             break;
         }
     }
-    if(untracked){
+    if(willCover){
         Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
     }
 
     //delete
-    for(auto& file : files_in_workdir){
-        if(untrackedFiles.count(file)) continue;
-        Utils::restrictedDelete(file);
+    for(auto& name : file_names_in_workdir){
+        if(untrackedfiles.count(name)) continue;
+        Utils::restrictedDelete(name);
     }
     //write
     for(auto& file : files){
@@ -392,20 +398,10 @@ void Repository::status(){
     std::cout<<"\n";
 
     //Untracked Files
-    std::vector<std::string> untrackedFiles;
-    for(auto& file : files_names_in_workdir){
-        if(stage.is_in_rm(file)){
-            untrackedFiles.push_back(file);
-            continue;
-        }
-        if(!stage.is_in_add(file) && !commit.in_commit(file)){
-            untrackedFiles.push_back(file);
-        }
-    }
-    std::sort(untrackedFiles.begin(), untrackedFiles.end());
+    std::map<std::string, int> untrackedFiles = getUntrackedFiles();
     std::cout<<"=== Untracked Files ===\n";
     for(auto& untrackedFile : untrackedFiles){
-        std::cout<<untrackedFile<<"\n";
+        std::cout<<untrackedFile.first<<"\n";
     }
 }
 
@@ -536,13 +532,16 @@ void Repository::merge(const std::string& branchname){
 
     bool conflict = false;
 //cases (2 3 4 7 are doing nothing)
+    std::map<std::string, int> untrackedFiles = getUntrackedFiles();
     //for files in LCA
     for(auto& file : LCA_files){
         std::string name = file.first;
         if(modify_in_given.count(name) && same_in_current.count(name)){//case 1
+            if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
             checkoutFileInCommit(given_commit_hash, name);
             add(name);
         }else if(same_in_current.count(name) && not_in_given.count(name)){//case 6
+            if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
             rm(name);
         }else if(modify_in_current.count(name) && modify_in_given.count(name)){//conflicts
             std::string current_blob_hash = modify_in_current[name];
@@ -573,6 +572,7 @@ void Repository::merge(const std::string& branchname){
     for(auto& file : new_in_given){
         std::string name = file.first;
         if(!new_in_current.count(name)){//case 5
+            if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
             checkoutFileInCommit(given_commit_hash, name);
             add(name);
         }else{//conflict
