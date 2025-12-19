@@ -533,16 +533,29 @@ void Repository::merge(const std::string& branchname){
     bool conflict = false;
 //cases (2 3 4 7 are doing nothing)
     std::map<std::string, int> untrackedFiles = getUntrackedFiles();
-    //for files in LCA
+    //check for cover of untracked files
     for(auto& file : LCA_files){
         std::string name = file.first;
         if(modify_in_given.count(name) && same_in_current.count(name)){//case 1
             if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
-            checkoutFileInCommit(given_commit_hash, name);
-            add(name);
         }else if(same_in_current.count(name) && not_in_given.count(name)){//case 6
             if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
-            rm(name);
+        }
+    }
+    for(auto& file : new_in_given){
+        std::string name = file.first;
+        if(!new_in_current.count(name)){//case 5
+            if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
+        }
+    }
+    //for files in LCA
+    for(auto& file : LCA_files){
+        std::string name = file.first;
+        if(modify_in_given.count(name) && same_in_current.count(name)){//case 1
+            checkoutFileInCommit(given_commit_hash, name);//may cause cover of untracked files
+            add(name);
+        }else if(same_in_current.count(name) && not_in_given.count(name)){//case 6
+            rm(name);//may cause cover of untracked files
         }else if(modify_in_current.count(name) && modify_in_given.count(name)){//conflicts
             std::string current_blob_hash = modify_in_current[name];
             std::string given_blob_hash = modify_in_given[name];
@@ -572,8 +585,7 @@ void Repository::merge(const std::string& branchname){
     for(auto& file : new_in_given){
         std::string name = file.first;
         if(!new_in_current.count(name)){//case 5
-            if(untrackedFiles.count(name)) Utils::exitWithMessage("There is an untracked file in the way; delete it, or add and commit it first.");
-            checkoutFileInCommit(given_commit_hash, name);
+            checkoutFileInCommit(given_commit_hash, name);//may cause cover of untracked files
             add(name);
         }else{//conflict
             std::string current_blob_hash = new_in_current[name];
