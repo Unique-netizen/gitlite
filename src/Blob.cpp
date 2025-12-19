@@ -14,10 +14,10 @@ void Blob::createBlob(const std::vector<unsigned char>& blobContent){
 
 std::vector<unsigned char> Blob::readBlobContents(const std::string& blobHash){
     std::string path = Utils::join(".gitlite/blobs/", blobHash);
-    Utils::readContents(path);
+    return Utils::readContents(path);
 }
 
 std::string Blob::readBlobContentsAsString(const std::string& blobHash){
     std::string path = Utils::join(".gitlite/blobs/", blobHash);
-    Utils::readContentsAsString(path);
+    return Utils::readContentsAsString(path);
 }
