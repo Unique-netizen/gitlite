@@ -8,7 +8,7 @@
 #include <sstream>
 
 //constructor from hash
-Commit::Commit(const std::string& commitHash, const std::string& repoPath){//here
+Commit::Commit(const std::string& commitHash, const std::string& repoPath){
     hash = commitHash;
     std::string path = Utils::join(repoPath, "commits", commitHash);
     std::string commitStr = Utils::readContentsAsString(path);
