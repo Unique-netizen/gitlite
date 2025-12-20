@@ -45,7 +45,8 @@ void Stage::writeStageFile(){
         newContent += ("-" + rm.first + "\n");
     }
     stageContent = newContent;
-    Utils::writeContents(".gitlite/stage", stageContent);
+    std::vector<unsigned char> content = Utils::serialize(stageContent);
+    Utils::writeContents(".gitlite/stage", content);
 }
 
 void Stage::clear(){
