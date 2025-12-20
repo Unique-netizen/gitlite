@@ -55,7 +55,7 @@ ref: .gitlite/branches/[branchname]
 ### 分支指针
 文件内为指向的`commit id`
 ### stage
-对下文字符串序列化存储
+对下文字符串序列化(Utils::serialize)存储
 ```text
 a.txt 972a1a11f19934401291cc99117ec614933374ce      # 暂存待添加，文件名 blob文件名
 -b.txt                                              # 暂存待删除，文件名前标记`-`
