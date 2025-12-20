@@ -66,7 +66,8 @@ void Commit::computeHash(){
 
 //get
 std::string Commit::getHash() const{
-    //computeHash();//just in case
+    //this will only be called when hash is already computed
+    //to get the hash of initial-commit or current-commit, which do not need modification
     return hash;
 }
 std::string Commit::getMessage() const{

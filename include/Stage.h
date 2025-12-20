@@ -12,19 +12,7 @@ class Stage{
 
 public:
     //constructor
-    Stage(const std::string& str) : stageContent{str} {
-        std::istringstream stream(str);
-        std::string first;
-        while(stream >> first){
-            if(first[0] == '-'){//removal
-                removal[first.substr(1)] = 1;
-            }else{//addition
-                std::string second;
-                stream >> second;
-                addition[first] = second;
-            }
-        }
-    }
+    Stage(const std::string& str);
 
     //get
     std::map<std::string, std::string> getAdd();
