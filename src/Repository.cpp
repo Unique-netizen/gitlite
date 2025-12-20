@@ -165,7 +165,7 @@ void Repository::commit(const std::string& message, bool isMerge, const std::str
 
 //log
 //helper function to get format time
-std::string formatTime(time_t timestamp){
+static std::string formatTime(time_t timestamp){
     char buffer[40];
     struct tm timeinfo;
     localtime_r(&timestamp, &timeinfo);
@@ -173,7 +173,7 @@ std::string formatTime(time_t timestamp){
     return std::string(buffer);
 }
 //helper function for format output
-void formatOutput(const std::string& hash, const Commit& commit){
+static void formatOutput(const std::string& hash, const Commit& commit){
     std::string message = commit.getMessage();
     time_t timestamp = commit.getTimestamp();
     std::string outputTime = formatTime(timestamp);
@@ -190,7 +190,7 @@ void formatOutput(const std::string& hash, const Commit& commit){
     std::cout << message << "\n\n";
 }
 //helper function to output branch
-void outputBranch(const std::string hash){
+static void outputBranch(const std::string hash){
     Commit commit(hash);
     formatOutput(hash, commit);
     if(commit.getMessage() == "initial commit") return;
@@ -443,7 +443,7 @@ void Repository::reset(const std::string& hash){
 
 //merge
 //helper function to get LCA
-Commit getLCA(const Commit& current, const Commit& given){
+static Commit getLCA(const Commit& current, const Commit& given){
     std::map<std::string, int> ancestors;
     std::queue<std::pair<std::string, int>> q;
     q.push({current.getHash(), 1});
@@ -465,7 +465,7 @@ Commit getLCA(const Commit& current, const Commit& given){
     }
 }
 //helper function to compare changes of a commit with LCA
-void compare(std::map<std::string, std::string>& LCA_files, const Commit& commit, std::map<std::string, std::string>& modify, std::map<std::string, std::string>& same, std::map<std::string, std::string>& notin, std::map<std::string, std::string>& newin){
+static void compare(std::map<std::string, std::string>& LCA_files, const Commit& commit, std::map<std::string, std::string>& modify, std::map<std::string, std::string>& same, std::map<std::string, std::string>& notin, std::map<std::string, std::string>& newin){
     std::map<std::string, std::string> commit_files = commit.getFiles();
     for(auto& file : commit_files){
         std::string name = file.first;
@@ -482,7 +482,7 @@ void compare(std::map<std::string, std::string>& LCA_files, const Commit& commit
     }
 }
 //helper function to write conflict file
-void writeConflict(const std::string& filepath, const std::string& current_content, const std::string& given_content){
+static void writeConflict(const std::string& filepath, const std::string& current_content, const std::string& given_content){
     std::string content;
     content += "<<<<<<< HEAD\n";
     content += current_content;
@@ -615,7 +615,7 @@ void Repository::merge(const std::string& branchname){
 
 //remote
 //helper function to get all commits needed to copy
-bool getFutureCommits(const std::string& current_commit_hash, const std::string& history_commit_hash, std::map<std::string, int>& futureCommits, const std::string& repoPath){
+static bool getFutureCommits(const std::string& current_commit_hash, const std::string& history_commit_hash, std::map<std::string, int>& futureCommits, const std::string& repoPath){
     Commit current(current_commit_hash, repoPath);
     std::vector<std::string> parents = current.getParents();
     bool found = false;
@@ -631,7 +631,7 @@ bool getFutureCommits(const std::string& current_commit_hash, const std::string&
     return found;
 }
 //helper function to copy commit files and blob files
-void copy_files(const std::map<std::string, int>& commits, const std::string& from, const std::string& to){
+static void copy_files(const std::map<std::string, int>& commits, const std::string& from, const std::string& to){
     for(auto& single_commit : commits){
         std::string commit_hash = single_commit.first;
         std::string from_commit_path = Utils::join(from, "commits", commit_hash);
