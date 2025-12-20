@@ -20,5 +20,10 @@ public:
     static void rmBranch(const std::string& branchname);
     static void reset(const std::string& hash);
     static void merge(const std::string& branchname);
+    static void addRemote(const std::string& remotename, const std::string& remotepath);
+    static void rmRemote(const std::string& remotename);
+    static void push(const std::string& remotename, const std::string& branchname);
+    static void fetch(const std::string& remotename, const std::string& branchname);
+    static void pull(const std::string& remotename, const std::string& branchname);
 };
 #endif

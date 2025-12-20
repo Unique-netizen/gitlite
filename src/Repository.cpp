@@ -12,6 +12,7 @@
 #include <ctime>
 #include <algorithm>
 #include <queue>
+#include <filesystem>
 
 
 std::string Repository::getGitliteDir(){
@@ -67,9 +68,10 @@ void Repository::initialize(){
     Utils::createDirectories(".gitlite");
     Utils::createDirectories(".gitlite/branches");
     Utils::writeContents(".gitlite/HEAD", "ref: .gitlite/branches/master");
-    Utils::writeContents(".gitlite/stage", "");//staged for addition and removal
+    Utils::writeContents(".gitlite/stage", "");//stage for addition and removal
     Utils::createDirectories(".gitlite/commits");
     Utils::createDirectories(".gitlite/blobs");
+    Utils::createDirectories(".gitlite/remotes");
     //init commit
     Commit initialCommit;
     initialCommit.writeCommitFile();
@@ -124,7 +126,7 @@ void Repository::rm(const std::string& filename){
     stage.writeStageFile();
 }
 
-void Repository::commit(const std::string& message, bool isMerge, std::string mergeParent){
+void Repository::commit(const std::string& message, bool isMerge, const std::string& mergeParent){
     if(message.empty()){
         Utils::exitWithMessage("Please enter a commit message.");
     }
@@ -317,7 +319,7 @@ void Repository::checkoutBranch(const std::string& branchname){
 
     std::string commithash = Utils::readContentsAsString(".gitlite/branches/" + branchname);
     checkoutCommit(commithash);
-    Utils::writeContents(".gitlite/HEAD", "ref: .gitlite/branches/" + branchname);
+    Pointers::set_ref(branchname);
 }
 
 
@@ -607,4 +609,109 @@ void Repository::merge(const std::string& branchname){
     if(conflict){
         Utils::message("Encountered a merge conflict.");
     }
+}
+
+
+
+//remote
+//helper function to get all commits needed to copy
+bool getFutureCommits(const std::string& current_commit_hash, const std::string& history_commit_hash, std::map<std::string, int>& futureCommits){
+    Commit current(current_commit_hash);
+    std::vector<std::string> parents = current.getParents();
+    bool found = false;
+    for(auto& parent : parents){
+        if(parent == history_commit_hash){
+            found = true;
+            futureCommits[current_commit_hash] = 1;
+        }
+        if(getFutureCommits(parent, history_commit_hash, futureCommits)){
+            futureCommits[current_commit_hash] = 1;
+        }
+    }
+    return found;
+}
+//helper function to copy commit files and blob files
+void copy_files(const std::map<std::string, int>& commits, const std::string& from, const std::string& to){
+    for(auto& single_commit : commits){
+        std::string commit_hash = single_commit.first;
+        std::string from_commit_path = Utils::join(from, "commits", commit_hash);
+        std::string to_commit_path = Utils::join(to, "commits", commit_hash);
+        std::filesystem::copy_file(from_commit_path, to_commit_path, std::filesystem::copy_options::skip_existing);
+        Commit commit(commit_hash);
+        std::map<std::string, std::string> files_in_commit = commit.getFiles();
+        for(auto& file : files_in_commit){
+            std::string blob_hash = file.second;
+            std::string from_blob_path = Utils::join(from, "commits", blob_hash);
+            std::string to_blob_path = Utils::join(to, "blobs", blob_hash);
+            std::filesystem::copy_file(from_blob_path, to_blob_path, std::filesystem::copy_options::skip_existing);
+        }
+    }
+}
+void Repository::addRemote(const std::string& remotename, const std::string& remotepath){
+    std::string remote = Utils::join(".gitlite/remotes/", remotename);
+    if(Utils::isFile(remote)) Utils::exitWithMessage("A remote with that name already exists.");
+    Utils::writeContents(remote, remotepath);
+}
+void Repository::rmRemote(const std::string& remotename){
+    std::string remote = Utils::join(".gitlite/remotes/", remotename);
+    if(!Utils::isFile(remote)) Utils::exitWithMessage("A remote with that name does not exist.");
+    Utils::simpleDelete(remote);
+}
+void Repository::push(const std::string& remotename, const std::string& branchname){
+    std::string remote = Utils::join(".gitlite/remotes/", remotename);
+    std::string remotepath = Utils::readContentsAsString(remote);
+    if(!Utils::isDirectory(remotepath)) Utils::exitWithMessage("Remote directory not found.");
+    std::string remoteBranchPath = Utils::join(remotepath, branchname);
+    if(Utils::isFile(remoteBranchPath)){
+        std::map<std::string, int> futureCommits;
+        std::string remoteBranchHead = Utils::readContentsAsString(remoteBranchPath);
+        std::string current_commit_hash = getHEAD();
+
+        getFutureCommits(current_commit_hash, remoteBranchHead, futureCommits);
+        if(futureCommits.empty()){
+            Utils::exitWithMessage("Please pull down remote changes before pushing.");
+        }
+
+        copy_files(futureCommits, ".gitlite", remotepath);
+
+        Utils::writeContents(remoteBranchPath, current_commit_hash);
+        Pointers::set_ref(branchname, remotepath);
+    }else{
+        std::map<std::string, int> futureCommits;
+        Commit initialCommit;//initialCommit have a fixed hash
+        std::string history_commit_hash = initialCommit.getHash();
+        std::string current_commit_hash = getHEAD();
+
+        getFutureCommits(current_commit_hash, history_commit_hash, futureCommits);
+
+        copy_files(futureCommits, ".gitlite", remotepath);
+
+        Utils::writeContents(remoteBranchPath, current_commit_hash);
+        Pointers::set_ref(branchname, remotepath);
+    }
+}
+void Repository::fetch(const std::string& remotename, const std::string& branchname){
+    std::string remote = Utils::join(".gitlite/remotes/", remotename);
+    std::string remotepath = Utils::readContentsAsString(remote);
+    if(!Utils::isDirectory(remotepath)) Utils::exitWithMessage("Remote directory not found.");
+
+    std::string remoteBranchPath = Utils::join(remotepath, "branches", branchname);
+    if(!Utils::isFile(remoteBranchPath)) Utils::exitWithMessage("That remote does not have that branch.");
+
+    Commit initialCommit;
+    std::string history_commit_hash = initialCommit.getHash();
+    std::string current_commit_hash = Utils::readContentsAsString(remoteBranchPath);
+    std::map<std::string, int> futureCommits;
+    
+    getFutureCommits(current_commit_hash, history_commit_hash, futureCommits);
+
+    copy_files(futureCommits, remotepath, ".gitlite");
+
+    std::string branch = Utils::join(".gitlite/branches", remotename, branchname);
+    Utils::writeContents(branch, current_commit_hash);
+}
+void Repository::pull(const std::string& remotename, const std::string& branchname){
+    fetch(remotename, branchname);
+    std::string mergeBranch = Utils::join(remotename, branchname);
+    merge(mergeBranch);
 }

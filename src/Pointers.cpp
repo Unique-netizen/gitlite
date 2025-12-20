@@ -17,7 +17,10 @@ std::string Pointers::get_ref(){
         return head.substr(pos + 1);
     }
 }
-
+void Pointers::set_ref(const std::string& branchname, const std::string& repoPath){
+    std::string path = Utils::join(repoPath, "HEAD");
+    Utils::writeContents(path, "ref: .gitlite/branches/" + branchname);
+}
 
 //branches
 std::vector<std::string> Pointers::getBranches(){

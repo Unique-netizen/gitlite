@@ -39,11 +39,11 @@ int main(int argc, char* argv[]) {
     } else if (firstArg == "add-remote") {
         checkCWD();
         checkArgsNum(args, 3);
-        //bloop.addRemote(args[1], args[2]);
+        bloop.addRemote(args[1], args[2]);
     } else if (firstArg == "rm-remote") {
         checkCWD();
         checkArgsNum(args, 2);
-        //bloop.rmRemote(args[1]);
+        bloop.rmRemote(args[1]);
     } else if (firstArg == "add") {
         checkCWD();
         checkArgsNum(args, 2);
@@ -108,15 +108,15 @@ int main(int argc, char* argv[]) {
     } else if (firstArg == "push") {
         checkCWD();
         checkArgsNum(args, 3);
-        //bloop.push(args[1], args[2]);
+        bloop.push(args[1], args[2]);
     } else if (firstArg == "fetch") {
         checkCWD();
         checkArgsNum(args, 3);
-        //bloop.fetch(args[1], args[2]);
+        bloop.fetch(args[1], args[2]);
     } else if (firstArg == "pull") {
         checkCWD();
         checkArgsNum(args, 3);
-        //bloop.pull(args[1], args[2]);
+        bloop.pull(args[1], args[2]);
     } else {
         std::cout << "No command with that name exists." << std::endl;
         return 0;

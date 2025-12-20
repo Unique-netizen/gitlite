@@ -62,3 +62,23 @@ void Command::reset(const std::string& hash){
 void Command::merge(const std::string& branchname){
     Repository::merge(branchname);
 }
+
+void Command::addRemote(const std::string& remotename, const std::string& remotepath){
+    Repository::addRemote(remotename, remotepath);
+}
+
+void Command::rmRemote(const std::string& remotename){
+    Repository::rmRemote(remotename);
+}
+
+void Command::push(const std::string& remotename, const std::string& branchname){
+    Repository::push(remotename, branchname);
+}
+
+void Command::fetch(const std::string& remotename, const std::string& branchname){
+    Repository::fetch(remotename, branchname);
+}
+
+void Command::pull(const std::string& remotename, const std::string& branchname){
+    Repository::pull(remotename, branchname);
+}

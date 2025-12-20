@@ -19,7 +19,9 @@ class Commit{
     void computeHash();
 
 public:
-    Commit() : message{"initial commit"}, timestamp{0} {};
+    Commit() : message{"initial commit"}, timestamp{0} {
+        computeHash();
+    }
     Commit(const std::string& str);//constructor from hash
 
 
