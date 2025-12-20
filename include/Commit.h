@@ -22,7 +22,7 @@ public:
     Commit() : message{"initial commit"}, timestamp{0} {
         computeHash();
     }
-    Commit(const std::string& str);//constructor from hash
+    Commit(const std::string& str, const std::string& repoPath = ".gitlite");//constructor from hash
 
 
     //get

@@ -615,8 +615,8 @@ void Repository::merge(const std::string& branchname){
 
 //remote
 //helper function to get all commits needed to copy
-bool getFutureCommits(const std::string& current_commit_hash, const std::string& history_commit_hash, std::map<std::string, int>& futureCommits){
-    Commit current(current_commit_hash);
+bool getFutureCommits(const std::string& current_commit_hash, const std::string& history_commit_hash, std::map<std::string, int>& futureCommits, const std::string& repoPath){
+    Commit current(current_commit_hash, repoPath);
     std::vector<std::string> parents = current.getParents();
     bool found = false;
     for(auto& parent : parents){
@@ -624,7 +624,7 @@ bool getFutureCommits(const std::string& current_commit_hash, const std::string&
             found = true;
             futureCommits[current_commit_hash] = 1;
         }
-        if(getFutureCommits(parent, history_commit_hash, futureCommits)){
+        if(getFutureCommits(parent, history_commit_hash, futureCommits, repoPath)){
             futureCommits[current_commit_hash] = 1;
         }
     }
@@ -637,11 +637,11 @@ void copy_files(const std::map<std::string, int>& commits, const std::string& fr
         std::string from_commit_path = Utils::join(from, "commits", commit_hash);
         std::string to_commit_path = Utils::join(to, "commits", commit_hash);
         std::filesystem::copy_file(from_commit_path, to_commit_path, std::filesystem::copy_options::skip_existing);
-        Commit commit(commit_hash);
+        Commit commit(commit_hash, from);
         std::map<std::string, std::string> files_in_commit = commit.getFiles();
         for(auto& file : files_in_commit){
             std::string blob_hash = file.second;
-            std::string from_blob_path = Utils::join(from, "commits", blob_hash);
+            std::string from_blob_path = Utils::join(from, "blobs", blob_hash);
             std::string to_blob_path = Utils::join(to, "blobs", blob_hash);
             std::filesystem::copy_file(from_blob_path, to_blob_path, std::filesystem::copy_options::skip_existing);
         }
@@ -661,13 +661,13 @@ void Repository::push(const std::string& remotename, const std::string& branchna
     std::string remote = Utils::join(".gitlite/remotes/", remotename);
     std::string remotepath = Utils::readContentsAsString(remote);
     if(!Utils::isDirectory(remotepath)) Utils::exitWithMessage("Remote directory not found.");
-    std::string remoteBranchPath = Utils::join(remotepath, branchname);
+    std::string remoteBranchPath = Utils::join(remotepath, "branches", branchname);
     if(Utils::isFile(remoteBranchPath)){
         std::map<std::string, int> futureCommits;
         std::string remoteBranchHead = Utils::readContentsAsString(remoteBranchPath);
         std::string current_commit_hash = getHEAD();
 
-        getFutureCommits(current_commit_hash, remoteBranchHead, futureCommits);
+        getFutureCommits(current_commit_hash, remoteBranchHead, futureCommits, ".gitlite");
         if(futureCommits.empty()){
             Utils::exitWithMessage("Please pull down remote changes before pushing.");
         }
@@ -682,7 +682,7 @@ void Repository::push(const std::string& remotename, const std::string& branchna
         std::string history_commit_hash = initialCommit.getHash();
         std::string current_commit_hash = getHEAD();
 
-        getFutureCommits(current_commit_hash, history_commit_hash, futureCommits);
+        getFutureCommits(current_commit_hash, history_commit_hash, futureCommits, ".gitlite");
 
         copy_files(futureCommits, ".gitlite", remotepath);
 
@@ -703,7 +703,7 @@ void Repository::fetch(const std::string& remotename, const std::string& branchn
     std::string current_commit_hash = Utils::readContentsAsString(remoteBranchPath);
     std::map<std::string, int> futureCommits;
     
-    getFutureCommits(current_commit_hash, history_commit_hash, futureCommits);
+    getFutureCommits(current_commit_hash, history_commit_hash, futureCommits, remotepath);
 
     copy_files(futureCommits, remotepath, ".gitlite");
 
