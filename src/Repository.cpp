@@ -10,7 +10,6 @@
 #include <sstream>
 #include <iostream>
 #include <ctime>
-#include <algorithm>
 #include <queue>
 #include <filesystem>
 
@@ -327,7 +326,6 @@ void Repository::checkoutBranch(const std::string& branchname){
 void Repository::status(){
     //branches
     std::vector<std::string> branches = Pointers::getBranches();
-    std::sort(branches.begin(), branches.end());
     std::string current = "";
     if(Pointers::is_ref()){
         current = Pointers::get_ref();

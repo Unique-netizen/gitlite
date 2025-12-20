@@ -267,6 +267,30 @@ std::vector<std::string> Utils::plainFilenamesIn(const std::string& dirPath) {
     std::sort(files.begin(), files.end());
     return files;
 }
+/** Returns a list of the names of all directories in the directory DIR, in
+*  order as C++ Strings.  Returns null if DIR does
+*  not denote a directory. */
+std::vector<std::string> Utils::DirnamesIn(const std::string& dirPath) {
+    std::vector<std::string> names;
+    
+    DIR* dir = opendir(dirPath.c_str());
+    if (dir == nullptr) {
+        return names;
+    }
+    
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != nullptr) {
+        if (entry->d_type == DT_DIR) { // Directory
+            std::string name = entry->d_name;
+            if(name == "." || name == "..") continue;
+            names.push_back(name);
+        }
+    }
+    
+    closedir(dir);
+    std::sort(names.begin(), names.end());
+    return names;
+}
 
 /* OTHER FILE UTILITIES */
 
