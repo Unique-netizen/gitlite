@@ -97,24 +97,10 @@ CMakeFiles/gitlite.dir/src/Blob.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gitlite.dir/src/Blob.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/gitlite/src/Blob.cpp -o CMakeFiles/gitlite.dir/src/Blob.cpp.s
 
-CMakeFiles/gitlite.dir/src/Command.cpp.o: CMakeFiles/gitlite.dir/flags.make
-CMakeFiles/gitlite.dir/src/Command.cpp.o: /root/gitlite/src/Command.cpp
-CMakeFiles/gitlite.dir/src/Command.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/gitlite.dir/src/Command.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/Command.cpp.o -MF CMakeFiles/gitlite.dir/src/Command.cpp.o.d -o CMakeFiles/gitlite.dir/src/Command.cpp.o -c /root/gitlite/src/Command.cpp
-
-CMakeFiles/gitlite.dir/src/Command.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/gitlite.dir/src/Command.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /root/gitlite/src/Command.cpp > CMakeFiles/gitlite.dir/src/Command.cpp.i
-
-CMakeFiles/gitlite.dir/src/Command.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/gitlite.dir/src/Command.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /root/gitlite/src/Command.cpp -o CMakeFiles/gitlite.dir/src/Command.cpp.s
-
 CMakeFiles/gitlite.dir/src/Commit.cpp.o: CMakeFiles/gitlite.dir/flags.make
 CMakeFiles/gitlite.dir/src/Commit.cpp.o: /root/gitlite/src/Commit.cpp
 CMakeFiles/gitlite.dir/src/Commit.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/gitlite.dir/src/Commit.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/gitlite.dir/src/Commit.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/Commit.cpp.o -MF CMakeFiles/gitlite.dir/src/Commit.cpp.o.d -o CMakeFiles/gitlite.dir/src/Commit.cpp.o -c /root/gitlite/src/Commit.cpp
 
 CMakeFiles/gitlite.dir/src/Commit.cpp.i: cmake_force
@@ -128,7 +114,7 @@ CMakeFiles/gitlite.dir/src/Commit.cpp.s: cmake_force
 CMakeFiles/gitlite.dir/src/GitliteException.cpp.o: CMakeFiles/gitlite.dir/flags.make
 CMakeFiles/gitlite.dir/src/GitliteException.cpp.o: /root/gitlite/src/GitliteException.cpp
 CMakeFiles/gitlite.dir/src/GitliteException.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/gitlite.dir/src/GitliteException.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/gitlite.dir/src/GitliteException.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/GitliteException.cpp.o -MF CMakeFiles/gitlite.dir/src/GitliteException.cpp.o.d -o CMakeFiles/gitlite.dir/src/GitliteException.cpp.o -c /root/gitlite/src/GitliteException.cpp
 
 CMakeFiles/gitlite.dir/src/GitliteException.cpp.i: cmake_force
@@ -142,7 +128,7 @@ CMakeFiles/gitlite.dir/src/GitliteException.cpp.s: cmake_force
 CMakeFiles/gitlite.dir/src/Pointers.cpp.o: CMakeFiles/gitlite.dir/flags.make
 CMakeFiles/gitlite.dir/src/Pointers.cpp.o: /root/gitlite/src/Pointers.cpp
 CMakeFiles/gitlite.dir/src/Pointers.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/gitlite.dir/src/Pointers.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/gitlite.dir/src/Pointers.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/Pointers.cpp.o -MF CMakeFiles/gitlite.dir/src/Pointers.cpp.o.d -o CMakeFiles/gitlite.dir/src/Pointers.cpp.o -c /root/gitlite/src/Pointers.cpp
 
 CMakeFiles/gitlite.dir/src/Pointers.cpp.i: cmake_force
@@ -156,7 +142,7 @@ CMakeFiles/gitlite.dir/src/Pointers.cpp.s: cmake_force
 CMakeFiles/gitlite.dir/src/Repository.cpp.o: CMakeFiles/gitlite.dir/flags.make
 CMakeFiles/gitlite.dir/src/Repository.cpp.o: /root/gitlite/src/Repository.cpp
 CMakeFiles/gitlite.dir/src/Repository.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/gitlite.dir/src/Repository.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/gitlite.dir/src/Repository.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/Repository.cpp.o -MF CMakeFiles/gitlite.dir/src/Repository.cpp.o.d -o CMakeFiles/gitlite.dir/src/Repository.cpp.o -c /root/gitlite/src/Repository.cpp
 
 CMakeFiles/gitlite.dir/src/Repository.cpp.i: cmake_force
@@ -170,7 +156,7 @@ CMakeFiles/gitlite.dir/src/Repository.cpp.s: cmake_force
 CMakeFiles/gitlite.dir/src/Stage.cpp.o: CMakeFiles/gitlite.dir/flags.make
 CMakeFiles/gitlite.dir/src/Stage.cpp.o: /root/gitlite/src/Stage.cpp
 CMakeFiles/gitlite.dir/src/Stage.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/gitlite.dir/src/Stage.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/gitlite.dir/src/Stage.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/Stage.cpp.o -MF CMakeFiles/gitlite.dir/src/Stage.cpp.o.d -o CMakeFiles/gitlite.dir/src/Stage.cpp.o -c /root/gitlite/src/Stage.cpp
 
 CMakeFiles/gitlite.dir/src/Stage.cpp.i: cmake_force
@@ -184,7 +170,7 @@ CMakeFiles/gitlite.dir/src/Stage.cpp.s: cmake_force
 CMakeFiles/gitlite.dir/src/Utils.cpp.o: CMakeFiles/gitlite.dir/flags.make
 CMakeFiles/gitlite.dir/src/Utils.cpp.o: /root/gitlite/src/Utils.cpp
 CMakeFiles/gitlite.dir/src/Utils.cpp.o: CMakeFiles/gitlite.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/gitlite.dir/src/Utils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/gitlite.dir/src/Utils.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/gitlite.dir/src/Utils.cpp.o -MF CMakeFiles/gitlite.dir/src/Utils.cpp.o.d -o CMakeFiles/gitlite.dir/src/Utils.cpp.o -c /root/gitlite/src/Utils.cpp
 
 CMakeFiles/gitlite.dir/src/Utils.cpp.i: cmake_force
@@ -199,7 +185,6 @@ CMakeFiles/gitlite.dir/src/Utils.cpp.s: cmake_force
 gitlite_OBJECTS = \
 "CMakeFiles/gitlite.dir/main.cpp.o" \
 "CMakeFiles/gitlite.dir/src/Blob.cpp.o" \
-"CMakeFiles/gitlite.dir/src/Command.cpp.o" \
 "CMakeFiles/gitlite.dir/src/Commit.cpp.o" \
 "CMakeFiles/gitlite.dir/src/GitliteException.cpp.o" \
 "CMakeFiles/gitlite.dir/src/Pointers.cpp.o" \
@@ -212,7 +197,6 @@ gitlite_EXTERNAL_OBJECTS =
 
 gitlite: CMakeFiles/gitlite.dir/main.cpp.o
 gitlite: CMakeFiles/gitlite.dir/src/Blob.cpp.o
-gitlite: CMakeFiles/gitlite.dir/src/Command.cpp.o
 gitlite: CMakeFiles/gitlite.dir/src/Commit.cpp.o
 gitlite: CMakeFiles/gitlite.dir/src/GitliteException.cpp.o
 gitlite: CMakeFiles/gitlite.dir/src/Pointers.cpp.o
@@ -221,7 +205,7 @@ gitlite: CMakeFiles/gitlite.dir/src/Stage.cpp.o
 gitlite: CMakeFiles/gitlite.dir/src/Utils.cpp.o
 gitlite: CMakeFiles/gitlite.dir/build.make
 gitlite: CMakeFiles/gitlite.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable gitlite"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/root/gitlite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable gitlite"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gitlite.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

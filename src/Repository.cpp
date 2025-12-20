@@ -58,7 +58,7 @@ std::map<std::string, int> Repository::getUntrackedFiles(){
 bool Repository::is_initialized(){
     return Utils::isDirectory(".gitlite");
 }
-void Repository::initialize(){
+void Repository::init(){
     //check whether there is already a .gitlite dir
     if(Repository::is_initialized()){
         Utils::exitWithMessage("A Gitlite version-control system already exists in the current directory.");

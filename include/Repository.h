@@ -15,7 +15,7 @@ class Repository{
     static void checkoutCommit(const std::string& hash);//helper function to checkout a commit
 public:
     static std::string getGitliteDir();
-    static void initialize();
+    static void init();
     static void add(const std::string& filename);
     static void rm(const std::string& filename);
     static void commit(const std::string& message, bool is_merge = false, const std::string& mergeParent = "");

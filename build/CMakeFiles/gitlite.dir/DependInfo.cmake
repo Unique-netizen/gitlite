@@ -10,7 +10,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/root/gitlite/main.cpp" "CMakeFiles/gitlite.dir/main.cpp.o" "gcc" "CMakeFiles/gitlite.dir/main.cpp.o.d"
   "/root/gitlite/src/Blob.cpp" "CMakeFiles/gitlite.dir/src/Blob.cpp.o" "gcc" "CMakeFiles/gitlite.dir/src/Blob.cpp.o.d"
-  "/root/gitlite/src/Command.cpp" "CMakeFiles/gitlite.dir/src/Command.cpp.o" "gcc" "CMakeFiles/gitlite.dir/src/Command.cpp.o.d"
   "/root/gitlite/src/Commit.cpp" "CMakeFiles/gitlite.dir/src/Commit.cpp.o" "gcc" "CMakeFiles/gitlite.dir/src/Commit.cpp.o.d"
   "/root/gitlite/src/GitliteException.cpp" "CMakeFiles/gitlite.dir/src/GitliteException.cpp.o" "gcc" "CMakeFiles/gitlite.dir/src/GitliteException.cpp.o.d"
   "/root/gitlite/src/Pointers.cpp" "CMakeFiles/gitlite.dir/src/Pointers.cpp.o" "gcc" "CMakeFiles/gitlite.dir/src/Pointers.cpp.o.d"

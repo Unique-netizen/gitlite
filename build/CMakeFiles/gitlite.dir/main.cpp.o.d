@@ -152,8 +152,7 @@ CMakeFiles/gitlite.dir/main.cpp.o: /root/gitlite/main.cpp \
  /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
- /usr/include/c++/13/bits/vector.tcc /root/gitlite/include/Command.h \
- /root/gitlite/include/Repository.h \
+ /usr/include/c++/13/bits/vector.tcc /root/gitlite/include/Repository.h \
  /root/gitlite/include/../include/Commit.h /usr/include/c++/13/ctime \
  /usr/include/c++/13/map /usr/include/c++/13/bits/stl_tree.h \
  /usr/include/c++/13/ext/aligned_buffer.h \
